@@ -1,9 +1,9 @@
+// MainActivity.kt
 package com.example.shoppinglist
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -13,9 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -30,9 +28,8 @@ import androidx.compose.ui.unit.dp
 import com.example.shopinglist.components.Title
 import com.example.shoppinglist.component.ItemInput
 import com.example.shoppinglist.component.SearchInput
-import com.example.shoppinglist.component.ShoppingList
+import com.example.shoppinglist.components.ShoppingList
 import com.example.shoppinglist.ui.theme.ShoppingListTheme
-import org.jetbrains.annotations.Nls
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,14 +49,18 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun ShoppingListApp() {
+    // State for the text in the new item input field
     var newItemText by rememberSaveable { mutableStateOf("") }
+    // State for the text in the search input field
     var searchQuery by rememberSaveable { mutableStateOf("") }
+    // State for the list of shopping items
     val shoppingItems = remember { mutableStateListOf<String>() }
 
+    // A derived state that automatically updates when searchQuery or shoppingItems change
     val filteredItems by remember(searchQuery, shoppingItems) {
         derivedStateOf {
             if (searchQuery.isBlank()) {
-                shoppingItems
+                shoppingItems.toList() // Return a stable copy for the UI
             } else {
                 shoppingItems.filter { it.contains(searchQuery, ignoreCase = true) }
             }
@@ -69,6 +70,7 @@ fun ShoppingListApp() {
     Column(
         modifier = Modifier
             .fillMaxSize()
+            // Accommodate for system bars like status bar and navigation bar
             .padding(WindowInsets.safeDrawing.asPaddingValues())
             .padding(horizontal = 16.dp)
     ) {
@@ -79,7 +81,7 @@ fun ShoppingListApp() {
             onAddItem = {
                 if (newItemText.isNotBlank()) {
                     shoppingItems.add(newItemText)
-                    newItemText = ""
+                    newItemText = "" // Clear the input field after adding
                 }
             }
         )
@@ -93,18 +95,10 @@ fun ShoppingListApp() {
     }
 }
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
 @Preview(showBackground = true)
 @Composable
-fun GreetingPreview() {
+fun ShoppingListAppPreview() {
     ShoppingListTheme {
-        Greeting("Android")
+        ShoppingListApp()
     }
 }
