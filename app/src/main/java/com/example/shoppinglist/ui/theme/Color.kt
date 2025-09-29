@@ -17,12 +17,12 @@ val PinkOnSurfaceDark = Color(0xFFE6E1E5)
 
 val PinkSecondary = Color(0xFFBD6565)
 val PinkSecondaryContainer = Color(0xFFFFE0DB)
-val PinkOnSecondaryContainer = Color(0xFF1962840)
+val PinkOnSecondaryContainer = Color(0xF1962840)
 
 val PinkPrimaryContainer = Color(0xFF77182E)
 val PinkOnPrimaryContainer = Color(0xFFE0B9B9)
 
-// Warna untuk dark mode
+
 val PinkDarkBackground = Color(0xFF121212)
 val PinkDarkOnBackground = Color(0xFFE6E1E5)
 val PinkDarkPrimaryContainer = Color(0xFF77182E)
