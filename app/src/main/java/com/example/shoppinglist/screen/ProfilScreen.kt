@@ -7,6 +7,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -20,6 +21,9 @@ import com.example.shoppinglist.R
 
 @Composable
 fun ProfileScreen() {
+    val containerColor = MaterialTheme.colorScheme.primaryContainer
+    val textColor = MaterialTheme.colorScheme.secondary
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -51,7 +55,7 @@ fun ProfileScreen() {
                 Box(
                     modifier = Modifier
                         .background(
-                            color = Color(0xFFFFE0DB),
+                            color = containerColor,
                             shape = RoundedCornerShape(20.dp)
                         )
                         .padding(20.dp)
@@ -61,11 +65,11 @@ fun ProfileScreen() {
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Column(modifier = Modifier.padding(16.dp)) {
-                            Text("Nama: Nayla Thahira Meldian")
-                            Text("NIM: 2311521006")
-                            Text("TTL: Padang, 08 Juni 2005")
-                            Text("Hobi: Travelling, Menonton")
-                            Text("Peminatan: Mobile Programming")
+                            Text("Nama: Nayla Thahira Meldian", color =textColor)
+                            Text("NIM: 2311521006", color =textColor)
+                            Text("TTL: Padang, 08 Juni 2005", color =textColor)
+                            Text("Hobi: Travelling, Menonton", color =textColor)
+                            Text("Peminatan: Mobile Programming", color =textColor)
                         }
                     }
                 }

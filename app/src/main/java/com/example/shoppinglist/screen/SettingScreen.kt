@@ -15,17 +15,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 
 data class SettingOption(val icon: androidx.compose.ui.graphics.vector.ImageVector, val title: String)
 
 @Composable
-fun SettingScreen() {
+fun SettingScreen(navController: NavController) {
     val options = listOf(
         SettingOption(Icons.Default.Person, "Profile"),
-        SettingOption(Icons.Default.Notifications, "Notifications"),
-        SettingOption(Icons.Default.Visibility, "Appearance"),
-        SettingOption(Icons.Default.Lock, "Privacy & Security"),
-        SettingOption(Icons.Default.Headphones, "Help and Support"),
         SettingOption(Icons.Default.Info, "About")
     )
 
@@ -38,7 +35,12 @@ fun SettingScreen() {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clickable { }
+                    .clickable {
+                        when (option.title) {
+                            "Profile" -> navController.navigate(Screen.Profile.route)
+                            "About" -> navController.navigate("about_app")
+                        }
+                    }
                     .padding(vertical = 12.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {

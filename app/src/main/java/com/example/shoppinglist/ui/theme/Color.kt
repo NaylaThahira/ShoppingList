@@ -4,31 +4,28 @@ import androidx.compose.ui.graphics.Color
 
 
 
-val PinkLight = Color(0xFF0F366F)
-val PinkDark = Color(0xFF42A5F5)
-val PinkOn = Color(0xFFFFFFFF)
-val PinkBackground = Color(0xFFF3F6FF)
-val PinkOnBackground = Color(0xFF1C1B1F)
-val PinkSurface = Color(0xFFEBF1FD)
-val PinkOnSurface = Color(0xFF1C1B1F)
+val BlueLight = Color(0xFF0F366F)
+val BlueDark = Color(0xFF1575C4)
+val BlueOn = Color(0xFFFFFFFF)
+val BlueBackground = Color(0xFFF3F6FF)
+val BlueOnBackground = Color(0xFF1C1B1F)
+val BlueSurface = Color(0xFFEBF1FD)
+val BlueOnSurface = Color(0xFF1C1B1F)
 
+val BlueSurfaceDark = Color(0xFF2B2930)
+val BlueOnSurfaceDark = Color(0xFFEBF1FD)
 
-val PinkSurfaceDark = Color(0xFF2B2930)
-// PinkOnSurfaceDark diganti menjadi Putih/Terang (Teks di atas Dark Surface)
-val PinkOnSurfaceDark = Color(0xFFEBF1FD)
+val BlueSecondary = Color(0xFF0F366F)
+val BlueSecondaryContainer = Color(0xFFE3F2FD)
+val BlueOnSecondaryContainer = Color(0xFF0F366F)
 
-val PinkSecondary = Color(0xFF0F366F)
-val PinkSecondaryContainer = Color(0xFFE3F2FD)
-val PinkOnSecondaryContainer = Color(0xFF1565C0)
+val BluePrimaryContainer = Color(0xFFA5C1E1)
+val BlueOnPrimaryContainer = Color(0xFFBBDEFB)
 
-val PinkPrimaryContainer = Color(0xFF1976D2)
-val PinkOnPrimaryContainer = Color(0xFFBBDEFB)
-
-
-val PinkDarkBackground = Color(0xFF121212)
-val PinkDarkOnBackground = Color(0xFFE6E1E5)
-val PinkDarkPrimaryContainer = Color(0xFF0D47A1)
-val PinkDarkOnPrimaryContainer = Color(0xFFBBDEFB)
-val PinkDarkSecondaryContainer = Color(0xFF1E88E5)
-val PinkDarkOnSecondaryContainer = Color(0xFFE3F2FD)
+val BlueDarkBackground = Color(0xFF121212)
+val BlueDarkOnBackground = Color(0xFFE6E1E5)
+val BlueDarkPrimaryContainer = Color(0xFF0D47A1)
+val BlueDarkOnPrimaryContainer = Color(0xFFBBDEFB)
+val BlueDarkSecondaryContainer = Color(0xFF1E88E5)
+val BlueDarkOnSecondaryContainer = Color(0xFFE3F2FD)
 

@@ -66,11 +66,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.shoppinglist.component.ShoppingListItem
 import com.example.shoppinglist.screen.*
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import androidx.compose.foundation.lazy.items
-
+import com.example.shoppinglist.component.ShoppingList
 
 
 class MainActivity : ComponentActivity() {
@@ -169,9 +168,9 @@ fun MainScreen() {
                 {
                     composable(Screen.Home.route) { ShoppingListApp(navController) }
                     composable(Screen.Profile.route) { ProfileScreen() }
-                    composable(Screen.Setting.route) { SettingScreen() }
-
-                    composable("detail/{itemName}") { backStackEntry ->
+                    composable(Screen.Setting.route) { SettingScreen(navController) }
+                    composable(Screen.About.route) { AboutScreen() }
+                    composable(Screen.Detail.route) { backStackEntry ->
                         val itemName = backStackEntry.arguments?.getString("itemName")
                         DetailScreen(itemName)
                     }
@@ -207,7 +206,7 @@ fun BottomNavigationBar(navController:NavHostController) {
 
 
 
-@OptIn(ExperimentalFoundationApi::class)
+
 @Composable
 fun ShoppingListApp(navController: NavHostController) {
     // State for the text in the new item input field
@@ -274,22 +273,14 @@ fun ShoppingListApp(navController: NavHostController) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        LazyColumn {
-            items(
-                items = filteredItems,
-                key = { it }
-            ) { item ->
-
-                ShoppingListItem(
-                    item = item,
-                    onDelete = { shoppingItems.remove(item) },
-                    onNavigateToDetail = { navController.navigate("detail/$item") },
-
-                )
-            }
-        }
+        ShoppingList(
+            items = filteredItems,
+            onDeleteItem = { item -> shoppingItems.remove(item) },
+            navController = navController,
+        )
     }
 }
+
 
 
 
