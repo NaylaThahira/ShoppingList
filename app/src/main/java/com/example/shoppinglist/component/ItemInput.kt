@@ -25,18 +25,26 @@ fun ItemInput(
             onValueChange = onTextChange,
             label = { Text("Add new item") },
             modifier = Modifier.weight(1f),
-            shape = RoundedCornerShape(16.dp)
+            shape = RoundedCornerShape(14.dp)
         )
 
         Spacer(modifier = Modifier.width(8.dp))
 
-        Button(onClick = onAddItem) {
+        Button(
+            onClick = onAddItem,
+            modifier = Modifier.size(56.dp),
+            shape = RoundedCornerShape(14.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.primary
+            ),
+            contentPadding = PaddingValues(0.dp)
+        ) {
             Icon(
                 imageVector = Icons.Filled.Add,
-                contentDescription = "Add Item"
+                contentDescription = "Add Item",
+                modifier = Modifier.size(24.dp)
             )
-            Spacer(modifier = Modifier.width(4.dp))
-            Text("Add")
+
         }
     }
 }

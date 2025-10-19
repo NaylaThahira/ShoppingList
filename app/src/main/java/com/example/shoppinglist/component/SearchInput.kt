@@ -16,9 +16,9 @@ fun SearchInput(query: String, onQueryChange: (String) -> Unit) {
     OutlinedTextField(
         value = query,
         onValueChange = onQueryChange,
-        label = { Text("Search items") },
+        placeholder = { Text("Search items") },
         modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(16.dp),
+        shape = RoundedCornerShape(12.dp),
         leadingIcon = { Icon(imageVector =
             Icons.Default.Search, contentDescription
         = "Search Icon")

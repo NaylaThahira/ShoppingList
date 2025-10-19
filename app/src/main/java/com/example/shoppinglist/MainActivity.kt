@@ -1,21 +1,33 @@
 // MainActivity.kt
 package com.example.shoppinglist
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -27,14 +39,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.shopinglist.components.Title
 import com.example.shoppinglist.component.ItemInput
 import com.example.shoppinglist.component.SearchInput
-import com.example.shoppinglist.components.ShoppingList
 import com.example.shoppinglist.ui.theme.ShoppingListTheme
 import kotlinx.coroutines.launch
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -47,11 +59,19 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.navigation.compose.NavHost
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.shoppinglist.component.ShoppingListItem
 import com.example.shoppinglist.screen.*
+import com.google.accompanist.navigation.animation.AnimatedNavHost
+import androidx.compose.foundation.lazy.items
+
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,12 +79,12 @@ class MainActivity : ComponentActivity() {
         setContent {
             ShoppingListTheme {
                 MainScreen()
-                }
             }
         }
     }
+}
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
 @Composable
 fun MainScreen() {
     val navController = rememberNavController()
@@ -117,23 +137,52 @@ fun MainScreen() {
                 BottomNavigationBar(navController)
             }
         ) { innerPadding ->
-            NavHost(
-                navController = navController,
-                startDestination = Screen.Home.route,
-                modifier = Modifier.padding(innerPadding)
-            ) {
-                composable(Screen.Home.route) { ShoppingListApp() }
-                composable(Screen.Profile.route) { ProfileScreen() }
-                composable(Screen.Setting.route) { SettingScreen() }
+            Box(modifier = Modifier.padding(innerPadding)) {
+                AnimatedNavHost(
+                    navController = navController,
+                    startDestination = Screen.Home.route,
+                    enterTransition = {
+                        slideInHorizontally(
+                            initialOffsetX = { 1000 },
+                            animationSpec = tween(500)
+                        ) + fadeIn()
+                    },
+                    exitTransition = {
+                        slideOutHorizontally(
+                            targetOffsetX = { -1000 },
+                            animationSpec = tween(500)
+                        ) + fadeOut()
+                    },
+                    popEnterTransition = {
+                        slideInHorizontally(
+                            initialOffsetX = { -1000 },
+                            animationSpec = tween(500)
+                        ) + fadeIn()
+                    },
+                    popExitTransition = {
+                        slideOutHorizontally(
+                            targetOffsetX = { 1000 },
+                            animationSpec = tween(500)
+                        ) + fadeOut()
+                    }
+                )
+                {
+                    composable(Screen.Home.route) { ShoppingListApp(navController) }
+                    composable(Screen.Profile.route) { ProfileScreen() }
+                    composable(Screen.Setting.route) { SettingScreen() }
+
+                    composable("detail/{itemName}") { backStackEntry ->
+                        val itemName = backStackEntry.arguments?.getString("itemName")
+                        DetailScreen(itemName)
+                    }
+                }
             }
-
-
         }
     }
 }
 
 @Composable
-fun BottomNavigationBar(navController: androidx.navigation.NavHostController) {
+fun BottomNavigationBar(navController:NavHostController) {
     val items = listOf(Screen.Home, Screen.Profile)
     val icons = listOf(Icons.Default.Home, Icons.Default.Person)
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -157,8 +206,10 @@ fun BottomNavigationBar(navController: androidx.navigation.NavHostController) {
 }
 
 
+
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun ShoppingListApp() {
+fun ShoppingListApp(navController: NavHostController) {
     // State for the text in the new item input field
     var newItemText by rememberSaveable { mutableStateOf("") }
     // State for the text in the search input field
@@ -184,7 +235,19 @@ fun ShoppingListApp() {
             .padding(WindowInsets.safeDrawing.asPaddingValues())
             .padding(horizontal = 16.dp)
     ) {
-        Title()
+
+        Text(
+            text = "Welcome!",
+            style = MaterialTheme.typography.headlineLarge.copy(
+                fontWeight = FontWeight.Bold,
+                fontSize = 32.sp
+            ),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 16.dp),
+            textAlign = androidx.compose.ui.text.style.TextAlign.Center
+        )
+
         ItemInput(
             text = newItemText,
             onTextChange = { newItemText = it },
@@ -195,20 +258,45 @@ fun ShoppingListApp() {
                 }
             }
         )
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(32.dp))
+        Text(
+            text = "Shopping List",
+            style = MaterialTheme.typography.titleLarge.copy(
+                fontWeight = FontWeight.Bold,
+                fontSize = 24.sp
+            ),
+            modifier = Modifier.padding(bottom = 16.dp)
+        )
         SearchInput(
             query = searchQuery,
             onQueryChange = { searchQuery = it }
         )
+
         Spacer(modifier = Modifier.height(16.dp))
-        ShoppingList(items = filteredItems)
+
+        LazyColumn {
+            items(
+                items = filteredItems,
+                key = { it }
+            ) { item ->
+
+                ShoppingListItem(
+                    item = item,
+                    onDelete = { shoppingItems.remove(item) },
+                    onNavigateToDetail = { navController.navigate("detail/$item") },
+
+                )
+            }
+        }
     }
 }
+
+
 
 @Preview(showBackground = true)
 @Composable
 fun ShoppingListAppPreview() {
     ShoppingListTheme {
-        ShoppingListApp()
+        ShoppingListApp(rememberNavController())
     }
 }
