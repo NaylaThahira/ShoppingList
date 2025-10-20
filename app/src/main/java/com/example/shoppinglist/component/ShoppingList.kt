@@ -30,13 +30,14 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.shoppinglist.ui.theme.ShoppingListTheme
 import com.example.shoppinglist.screen.Screen
+import com.example.shoppinglist.ShoppingItem
 
 // KOMPONEN WRAPPER UNTUK MENGELOLA STATE SELEKSI
 @Composable
-fun ShoppingList(items: List<String>, onDeleteItem: (String) -> Unit, navController: NavController) {
+fun ShoppingList(items: List<ShoppingItem>, onDeleteItem: (ShoppingItem) -> Unit, navController: NavController) {
 
     // State yang melacak item mana yang sedang dipilih/diklik
-    var selectedItem by remember { mutableStateOf<String?>(null) }
+    var selectedItem by remember { mutableStateOf<ShoppingItem?>(null) }
 
     LazyColumn(
         modifier = Modifier
@@ -47,23 +48,22 @@ fun ShoppingList(items: List<String>, onDeleteItem: (String) -> Unit, navControl
     ) {
         items(
             items = items,
-            key = { it } // Tetap gunakan key untuk performa
+            key = { it.name } // Tetap gunakan key untuk performa
         ) { item ->
             ItemCardWithActions(
-                itemName = item,
+                item= item,
                 // Mengirim status seleksi
                 isSelected = selectedItem == item,
                 onItemClick = {
-                    // ❗ LOGIKA UTAMA: Klik Card hanya me-toggle seleksi
                     selectedItem = if (selectedItem == item) null else item
                 },
                 onDelete = {
                     onDeleteItem(item)
-                    selectedItem = null // Hapus seleksi setelah terhapus
+                    selectedItem = null
                 },
                 onNavigateToDetail = {
-                    navController.navigate("detail/$item")
-                    selectedItem = null // Hapus seleksi sebelum navigasi
+                    navController.navigate(Screen.Detail.createDetailRoute(item.name, item.quantity))
+                    selectedItem = null
                 }
             )
         }
@@ -73,9 +73,9 @@ fun ShoppingList(items: List<String>, onDeleteItem: (String) -> Unit, navControl
 // KOMPONEN CARD DENGAN LOGIKA TOMBOL DETAIL/HAPUS
 @Composable
 fun ItemCardWithActions(
-    itemName: String,
+    item: ShoppingItem,
     isSelected: Boolean,
-    onItemClick: (String) -> Unit,
+    onItemClick: (ShoppingItem) -> Unit,
     onDelete: () -> Unit,
     onNavigateToDetail: () -> Unit
 ) {
@@ -118,7 +118,7 @@ fun ItemCardWithActions(
                 .clickable (
                     interactionSource = interactionSource,
                     indication = null,
-                    onClick = { onItemClick(itemName) } // KLIK CARD HANYA MENGUBAH STATE SELEKSI
+                    onClick = { onItemClick(item) } // KLIK CARD HANYA MENGUBAH STATE SELEKSI
                 ),
             shape = RoundedCornerShape(16.dp),
             colors = CardDefaults.cardColors(
@@ -153,7 +153,7 @@ fun ItemCardWithActions(
 
                 // Nama item
                 Text(
-                    text = itemName,
+                    text = item.name, // FIX 8: Mengakses item.name dan item.quantity
                     style = MaterialTheme.typography.titleMedium.copy(
                         textDecoration = null
                     ),
@@ -213,7 +213,7 @@ fun ItemCardWithActionsPreview() {
     ShoppingListTheme {
         Column(Modifier.padding(16.dp)) {
             ItemCardWithActions(
-                itemName = "Apel Fuji",
+                item = ShoppingItem(name = "Apel Fuji", quantity = 5),
                 isSelected = false,
                 onItemClick = {},
                 onDelete = { /* Do nothing */ },
@@ -221,7 +221,7 @@ fun ItemCardWithActionsPreview() {
             )
             Spacer(Modifier.height(16.dp))
             ItemCardWithActions(
-                itemName = "Pisang Cavendish",
+                item = ShoppingItem(name = "Pisang Cavendish", quantity = 12),
                 isSelected = true,
                 onItemClick = {},
                 onDelete = { /* Do nothing */ },

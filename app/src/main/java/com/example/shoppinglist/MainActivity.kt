@@ -62,7 +62,10 @@ import com.example.shoppinglist.screen.*
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.example.shoppinglist.component.ShoppingList
 
-
+data class ShoppingItem(
+    val name: String,
+    val quantity: Int
+)
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -169,7 +172,8 @@ fun MainScreen() {
                     composable(Screen.About.route) { AboutScreen() }
                     composable(Screen.Detail.route) { backStackEntry ->
                         val itemName = backStackEntry.arguments?.getString("itemName")
-                        DetailScreen(itemName)
+                        val itemQuantity = backStackEntry.arguments?.getString("itemQuantity")?.toIntOrNull()
+                        DetailScreen(itemName, itemQuantity)
                     }
                 }
             }
@@ -210,9 +214,10 @@ fun ShoppingListApp(navController: NavHostController) {
     // State for the text in the new item input field
     var newItemText by rememberSaveable { mutableStateOf("") }
     // State for the text in the search input field
+    var newQuantityText by rememberSaveable { mutableStateOf("1") }
     var searchQuery by rememberSaveable { mutableStateOf("") }
     // State for the list of shopping items
-    val shoppingItems = remember { mutableStateListOf<String>() }
+    val shoppingItems = remember { mutableStateListOf<ShoppingItem>() }
 
     // A derived state that automatically updates when searchQuery or shoppingItems change
     val filteredItems by remember(searchQuery, shoppingItems) {
@@ -220,7 +225,7 @@ fun ShoppingListApp(navController: NavHostController) {
             if (searchQuery.isBlank()) {
                 shoppingItems.toList() // Return a stable copy for the UI
             } else {
-                shoppingItems.filter { it.contains(searchQuery, ignoreCase = true) }
+                shoppingItems.filter { it.name.contains(searchQuery, ignoreCase = true) }
             }
         }
     }
@@ -248,10 +253,15 @@ fun ShoppingListApp(navController: NavHostController) {
         ItemInput(
             text = newItemText,
             onTextChange = { newItemText = it },
+            quantity = newQuantityText,
+            onQuantityChange = { newQuantityText = it },
             onAddItem = {
+                val quantityValue = newQuantityText.toIntOrNull() ?: 1
                 if (newItemText.isNotBlank()) {
-                    shoppingItems.add(newItemText)
+                    // FIX: Menambahkan objek ShoppingItem
+                    shoppingItems.add(ShoppingItem(newItemText, quantityValue))
                     newItemText = "" // Clear the input field after adding
+                    newQuantityText = "1" // Reset quantity
                 }
             }
         )
@@ -273,7 +283,7 @@ fun ShoppingListApp(navController: NavHostController) {
 
         ShoppingList(
             items = filteredItems,
-            onDeleteItem = { item -> shoppingItems.remove(item) },
+            onDeleteItem = { item: ShoppingItem -> shoppingItems.remove(item) },
             navController = navController,
         )
     }

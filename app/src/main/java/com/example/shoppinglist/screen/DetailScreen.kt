@@ -2,6 +2,7 @@
 package com.example.shoppinglist.screen
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -15,7 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun DetailScreen(itemName: String?) {
+fun DetailScreen(itemName: String?, itemQuantity : Int?) {
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -29,11 +30,18 @@ fun DetailScreen(itemName: String?) {
                 .fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
-            Text(
-                text = "Kamu memilih: ${itemName ?: "Tidak ada item"}",
-                style = MaterialTheme.typography.titleLarge,
-                modifier = Modifier.padding(16.dp)
-            )
+            Column(horizontalAlignment = Alignment.CenterHorizontally) { // Gunakan Column untuk menampilkan lebih dari satu Text
+                Text(
+                    text = "Item: ${itemName ?: "Tidak ada item"}",
+                    style = MaterialTheme.typography.titleLarge,
+                    modifier = Modifier.padding(bottom = 8.dp)
+                )
+                Text(
+                    text = "Quantity: ${itemQuantity ?: 0}", // Menampilkan quantity
+                    style = MaterialTheme.typography.titleMedium,
+                    modifier = Modifier.padding(top = 8.dp)
+                )
+            }
         }
     }
 }
