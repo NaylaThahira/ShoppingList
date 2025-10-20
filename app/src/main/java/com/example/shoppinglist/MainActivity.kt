@@ -1,7 +1,6 @@
 // MainActivity.kt
 package com.example.shoppinglist
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -11,10 +10,8 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
@@ -23,8 +20,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
@@ -45,8 +40,6 @@ import com.example.shoppinglist.ui.theme.ShoppingListTheme
 import kotlinx.coroutines.launch
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -59,7 +52,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -68,7 +60,6 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.shoppinglist.screen.*
 import com.google.accompanist.navigation.animation.AnimatedNavHost
-import androidx.compose.foundation.lazy.items
 import com.example.shoppinglist.component.ShoppingList
 
 
@@ -129,8 +120,14 @@ fun MainScreen() {
                         IconButton(onClick = { scope.launch { drawerState.open() } }) {
                             Icon(Icons.Default.Menu, contentDescription = "Menu")
                         }
-                    }
+                    },
+                    colors = androidx.compose.material3.TopAppBarDefaults.topAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        titleContentColor = MaterialTheme.colorScheme.onPrimary,
+                        navigationIconContentColor = MaterialTheme.colorScheme.onPrimary
+                    )
                 )
+
             },
             bottomBar = {
                 BottomNavigationBar(navController)
@@ -198,7 +195,8 @@ fun BottomNavigationBar(navController:NavHostController) {
                     }
                 },
                 icon = { Icon(icons[index], contentDescription = screen.title) },
-                label = { Text(screen.title) }
+                label = { Text(screen.title) },
+
             )
         }
     }
