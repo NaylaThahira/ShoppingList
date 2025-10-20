@@ -211,15 +211,11 @@ fun BottomNavigationBar(navController:NavHostController) {
 
 @Composable
 fun ShoppingListApp(navController: NavHostController) {
-    // State for the text in the new item input field
+
     var newItemText by rememberSaveable { mutableStateOf("") }
-    // State for the text in the search input field
     var newQuantityText by rememberSaveable { mutableStateOf("1") }
     var searchQuery by rememberSaveable { mutableStateOf("") }
-    // State for the list of shopping items
     val shoppingItems = remember { mutableStateListOf<ShoppingItem>() }
-
-    // A derived state that automatically updates when searchQuery or shoppingItems change
     val filteredItems by remember(searchQuery, shoppingItems) {
         derivedStateOf {
             if (searchQuery.isBlank()) {
@@ -258,7 +254,6 @@ fun ShoppingListApp(navController: NavHostController) {
             onAddItem = {
                 val quantityValue = newQuantityText.toIntOrNull() ?: 1
                 if (newItemText.isNotBlank()) {
-                    // FIX: Menambahkan objek ShoppingItem
                     shoppingItems.add(ShoppingItem(newItemText, quantityValue))
                     newItemText = "" // Clear the input field after adding
                     newQuantityText = "1" // Reset quantity

@@ -24,7 +24,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -32,11 +31,11 @@ import com.example.shoppinglist.ui.theme.ShoppingListTheme
 import com.example.shoppinglist.screen.Screen
 import com.example.shoppinglist.ShoppingItem
 
-// KOMPONEN WRAPPER UNTUK MENGELOLA STATE SELEKSI
+
 @Composable
 fun ShoppingList(items: List<ShoppingItem>, onDeleteItem: (ShoppingItem) -> Unit, navController: NavController) {
 
-    // State yang melacak item mana yang sedang dipilih/diklik
+
     var selectedItem by remember { mutableStateOf<ShoppingItem?>(null) }
 
     LazyColumn(
@@ -48,11 +47,10 @@ fun ShoppingList(items: List<ShoppingItem>, onDeleteItem: (ShoppingItem) -> Unit
     ) {
         items(
             items = items,
-            key = { it.name } // Tetap gunakan key untuk performa
+            key = { it.name }
         ) { item ->
             ItemCardWithActions(
                 item= item,
-                // Mengirim status seleksi
                 isSelected = selectedItem == item,
                 onItemClick = {
                     selectedItem = if (selectedItem == item) null else item
@@ -70,7 +68,7 @@ fun ShoppingList(items: List<ShoppingItem>, onDeleteItem: (ShoppingItem) -> Unit
     }
 }
 
-// KOMPONEN CARD DENGAN LOGIKA TOMBOL DETAIL/HAPUS
+
 @Composable
 fun ItemCardWithActions(
     item: ShoppingItem,
@@ -79,14 +77,14 @@ fun ItemCardWithActions(
     onDelete: () -> Unit,
     onNavigateToDetail: () -> Unit
 ) {
-    // Animasi Hover/Press
+
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
 
     val itemContainerColor by animateColorAsState(
         targetValue = when {
-            isSelected -> MaterialTheme.colorScheme.primaryContainer // Klik/Selected
-            isPressed -> MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.8f) // Hover/Tekan
+            isSelected -> MaterialTheme.colorScheme.primaryContainer
+            isPressed -> MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.8f)
             else -> MaterialTheme.colorScheme.surface // Default
         },
         animationSpec = tween(200),
@@ -118,7 +116,7 @@ fun ItemCardWithActions(
                 .clickable (
                     interactionSource = interactionSource,
                     indication = null,
-                    onClick = { onItemClick(item) } // KLIK CARD HANYA MENGUBAH STATE SELEKSI
+                    onClick = { onItemClick(item) }
                 ),
             shape = RoundedCornerShape(16.dp),
             colors = CardDefaults.cardColors(
@@ -153,7 +151,7 @@ fun ItemCardWithActions(
 
                 // Nama item
                 Text(
-                    text = item.name, // FIX 8: Mengakses item.name dan item.quantity
+                    text = item.name,
                     style = MaterialTheme.typography.titleMedium.copy(
                         textDecoration = null
                     ),
@@ -161,12 +159,12 @@ fun ItemCardWithActions(
                     modifier = Modifier.weight(1f)
                 )
 
-                // Placeholder agar item terisi penuh
+
                 Spacer(modifier = Modifier.size(24.dp))
             }
         }
 
-        // ANIMATED VISIBILITY: Tombol Detail dan Hapus
+
         AnimatedVisibility(
             visible = isSelected,
             enter = fadeIn() + expandVertically(expandFrom = Alignment.Top),
@@ -179,7 +177,7 @@ fun ItemCardWithActions(
                 horizontalArrangement = Arrangement.End
             ) {
                 Button(
-                    onClick = onNavigateToDetail, // KLIK NAVIGASI DI TOMBOL
+                    onClick = onNavigateToDetail,
                     colors = ButtonDefaults.buttonColors(
                         containerColor = MaterialTheme.colorScheme.primary
                     )
@@ -192,7 +190,7 @@ fun ItemCardWithActions(
                 Spacer(modifier = Modifier.width(8.dp))
 
                 OutlinedButton(
-                    onClick = onDelete, // KLIK HAPUS DI TOMBOL
+                    onClick = onDelete,
                     colors = ButtonDefaults.outlinedButtonColors(
                         contentColor = MaterialTheme.colorScheme.error
                     ),

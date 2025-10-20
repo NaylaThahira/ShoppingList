@@ -30,14 +30,14 @@ fun DetailScreen(itemName: String?, itemQuantity : Int?) {
                 .fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
-            Column(horizontalAlignment = Alignment.CenterHorizontally) { // Gunakan Column untuk menampilkan lebih dari satu Text
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
                     text = "Item: ${itemName ?: "Tidak ada item"}",
                     style = MaterialTheme.typography.titleLarge,
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
                 Text(
-                    text = "Quantity: ${itemQuantity ?: 0}", // Menampilkan quantity
+                    text = "Quantity: ${itemQuantity ?: 0}",
                     style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier.padding(top = 8.dp)
                 )
